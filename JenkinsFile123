@@ -1,0 +1,46 @@
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('ContinuousDownload') 
+        {
+             steps
+            {
+                script
+                {
+                 try
+                 {
+                    git 'https://github.com/intelliqittrainings/maven.git'
+                 }
+                    catch(Exception e1)
+                    {
+                    mail bcc: '', body: 'Jenkins is unable to download the code from Git hub.', cc: '', from: '', replyTo: '', subject: 'Download failed : Please take necessary Action', to: 'mohdzuber857@gmail.com'
+                   
+                        exit(1)
+                    }
+                }
+            }
+        }
+        stage('ContinuousBuild') 
+        {
+             steps
+            {
+                script
+                {
+                 try
+                 {
+                   sh 'mvn package'
+                 }
+                    catch(Exception e2)
+                    {
+                        mail bcc: '', body: 'Jenkins is unable to create a artifact , please try to fixed this issue.', cc: '', from: '', replyTo: '', subject: 'Build failed: Please take necessary Action', to: 'mohdzuber857@gmail.com'
+                       
+                        exit(1)
+                    }
+                }
+            }
+        }
+	}
+	}
+
